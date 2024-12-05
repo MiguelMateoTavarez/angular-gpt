@@ -3,6 +3,13 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@use-cases/*": ["app/core/use-cases"],
+      "@interfaces/*": ["app/interfaces/*"],
+      "@components/*": ["app/presentation/components/*"],
+      "@services/*": ["app/presentation/services/*"],
+    },
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
