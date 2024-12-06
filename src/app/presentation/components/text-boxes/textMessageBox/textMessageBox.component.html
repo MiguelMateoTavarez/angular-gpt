@@ -1,11 +1,15 @@
-<form class="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
+<form
+  [formGroup]="form"
+  (ngSubmit)="handleSubmit()"
+  class="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
   <div class="flex-grow">
     <div class="relative w-full">
       <input
         class="flex w-full border-2 rounded-xl text-gray-800 focus:outline-none focus:border-indigo-300 pl-4 h-10"
         type="text"
         autofocus
-        placeholder="Message..."
+        [placeholder]="placeHolder()"
+        formControlName="prompt"
       >
     </div>
   </div>
