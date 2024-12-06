@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ChatMessageComponent, MyMessageComponent } from '@components/index';
 import { TypingLoaderComponent } from "../../components/typingLoader/typingLoader.component";
+import { TextMessageBoxComponent } from "../../components/text-boxes/textMessageBox/textMessageBox.component";
 
 
 @Component({
@@ -11,7 +12,8 @@ import { TypingLoaderComponent } from "../../components/typingLoader/typingLoade
     CommonModule,
     ChatMessageComponent,
     MyMessageComponent,
-    TypingLoaderComponent
+    TypingLoaderComponent,
+    TextMessageBoxComponent
 ],
   templateUrl: './orthographyPage.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
