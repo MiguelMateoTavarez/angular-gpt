@@ -18,4 +18,9 @@ import { TextMessageBoxComponent } from "../../components/text-boxes/textMessage
   templateUrl: './orthographyPage.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class OrthographyPageComponent { }
+export default class OrthographyPageComponent {
+
+  handleMessage(prompt: string) {
+    console.log(prompt);
+  }
+}

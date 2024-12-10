@@ -11,9 +11,9 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextMessageBoxComponent {
-  placeHolder = input<string>('');
-  disableCorrections = input<boolean>(false);
-  onMessage = output<string>();
+  placeHolder         = input<string>('');
+  disableCorrections  = input<boolean>(false);
+  onMessage           = output<string>();
 
   public fb = inject(FormBuilder);
   public form = this.fb.group({
@@ -22,11 +22,9 @@ export class TextMessageBoxComponent {
 
   handleSubmit() {
     if (this.form.invalid) return;
-
     const { prompt } = this.form.value;
-    console.log(prompt);
-    this.onMessage.emit(prompt ?? '');
 
+    this.onMessage.emit(prompt ?? '');
     this.form.reset();
   }
 
