@@ -3,10 +3,9 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { ChatMessageComponent, MyMessageComponent } from '@components/index';
 import { TypingLoaderComponent } from "@components/typingLoader/typingLoader.component";
 import { TextMessageBoxComponent } from "@components/text-boxes/textMessageBox/textMessageBox.component";
-import { TextMessageBoxFileComponent, TextMessageEvent } from "@components/text-boxes/textMessageBoxFile/textMessageBoxFile.component";
-import { TextMessageBoxEvent, TextMessageBoxSelectComponent } from "../../components/text-boxes/textMessageBoxSelect/textMessageBoxSelect.component";
 import { Message } from '@interfaces/message.interface';
-import { OpenAiService } from '@services/openai.service';
+import { GeminiAiService } from '@services/gemminiai.service';
+import { GptMessageOrthographyComponent } from "../../components/chat-bubbles/gptMessageOrthography/gptMessageOrthography.component";
 
 
 @Component({
@@ -18,30 +17,39 @@ import { OpenAiService } from '@services/openai.service';
     MyMessageComponent,
     TypingLoaderComponent,
     TextMessageBoxComponent,
-    TextMessageBoxFileComponent,
-    TextMessageBoxSelectComponent
-  ],
+    GptMessageOrthographyComponent
+],
   templateUrl: './orthographyPage.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class OrthographyPageComponent {
 
-  public messages = signal<Message[]>([{
-    text: 'Hello world!',
-    isGpt: false
-  }]);
+  public messages = signal<Message[]>([]);
   public isLoading = signal<boolean>(false);
-  public openAiService = inject(OpenAiService);
+  public geminiAiService = inject(GeminiAiService);
 
   handleMessage(prompt: string) {
-    console.log(prompt);
-  }
+    this.isLoading.set(true);
 
-  handleMessageWithFile({ prompt, file }: TextMessageEvent) {
-    console.log(prompt, file);
-  }
+    this.messages.update((prev) => [
+      ...prev,
+      {
+        isGpt: false,
+        text: prompt
+      }
+    ]);
 
-  handleMessageWithSelect({ prompt, selectedOption }: TextMessageBoxEvent) {
-    console.log(prompt, selectedOption);
+    this.geminiAiService.checkOrthography( prompt )
+      .subscribe((resp) => {
+        this.isLoading.set(false);
+        this.messages.update((prev) => [
+          ...prev,
+          {
+            isGpt: true,
+            text: resp.message,
+            info: resp,
+          }
+        ]);
+      });
   }
 }
