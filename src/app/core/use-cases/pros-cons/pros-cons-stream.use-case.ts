@@ -10,30 +10,27 @@ export async function* prosConsStreamUseCase (prompt: string) {
       body: JSON.stringify({ prompt })
     });
 
-    console.log(resp);
-
     if(!resp.ok) throw new Error('Something went wrong');
 
     const reader = resp.body?.getReader();
 
-    if(!reader) {
-      console.log('The reader couldn\'t be created');
-      throw new Error('The reader couldn\'t be created');
-    }
+    if(!reader) throw new Error('The reader could not be generated');
 
-    const decode  = new TextDecoder();
+    const decoder = new TextDecoder();
+
     let text = '';
 
-    while(true){
+    while(true) {
       const {value, done} = await reader.read();
 
       if(done) break;
 
-      text += decode.decode(value);
+      const decodedChunk = decoder.decode(value, {stream: true});
+      text += decodedChunk;
       yield text;
     }
 
-    return JSON.parse(text);
+    return null;
 
   }catch(error) {
     return {
