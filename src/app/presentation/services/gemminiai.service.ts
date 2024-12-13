@@ -13,8 +13,8 @@ export class GeminiAiService {
     return from(prosConsUseCase(prompt));
   }
 
-  consultProsConsStream(prompt: string) {
-    return prosConsStreamUseCase(prompt);
+  consultProsConsStream(prompt: string, abortSignal: AbortSignal) {
+    return prosConsStreamUseCase(prompt, abortSignal);
   }
 
 }

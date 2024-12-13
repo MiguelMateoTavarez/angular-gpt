@@ -25,7 +25,12 @@ export default class ProsConsStreamPageComponent {
   public isLoading = signal<boolean>(false);
   public geminiAiService = inject(GeminiAiService);
 
+  public abortSignal = new AbortController()
+
   async handleMessage(prompt: string) {
+
+    this.abortSignal.abort();
+    this.abortSignal = new AbortController();
 
     this.messages.update((prev) => [
       ...prev,
@@ -35,15 +40,13 @@ export default class ProsConsStreamPageComponent {
       },
       {
         isGpt: true,
-        text: 'Comparando...'
+        text: '...'
       }
     ]);
 
     this.isLoading.set(true);
-    const stream =this.geminiAiService.consultProsConsStream(prompt);
+    const stream =this.geminiAiService.consultProsConsStream(prompt, this.abortSignal.signal);
     this.isLoading.set(false);
-
-    console.log(stream);
 
     for await (const text of stream) {
       this.handleStreamResponse(text);
