@@ -1,40 +1,37 @@
 import { environment } from "environments/environment.development";
 
-export async function* prosConsStreamUseCase (prompt: string, abortSignal: AbortSignal) {
+export async function* prosConsStreamUseCase(prompt: string, abortSignal: AbortSignal) {
   try {
-    const resp = await fetch(`${environment.backendApi}/gpt/pros-cons-discusser-stream`,{
+    const resp = await fetch(`${environment.backendApi}/gpt/pros-cons-discusser-stream`, {
       method: 'POST',
-      headers:  {
+      headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ prompt }),
       signal: abortSignal
     });
 
-    if(!resp.ok) throw new Error('Something went wrong');
+    if (!resp.ok) throw new Error('Something went wrong');
 
     const reader = resp.body?.getReader();
 
-    if(!reader) throw new Error('The reader could not be generated');
+    if (!reader) throw new Error('The reader could not be generated');
 
     const decoder = new TextDecoder();
 
     let text = '';
 
-    while(true) {
-      const {value, done} = await reader.read();
-      console.log(value);
-      console.log(done);
-      if(done) break;
-
-      text += decoder.decode(value, {stream: true});
-      console.log(text);
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) { break };
+      const decodedChunk = decoder.decode(value, { stream: true })
+      text += decodedChunk;
       yield text;
     }
 
     return null;
 
-  }catch(error) {
+  } catch (error) {
     return {
       ok: false,
       question: prompt,
