@@ -23,11 +23,12 @@ export async function* prosConsStreamUseCase (prompt: string, abortSignal: Abort
 
     while(true) {
       const {value, done} = await reader.read();
-
+      console.log(value);
+      console.log(done);
       if(done) break;
 
-      const decodedChunk = decoder.decode(value, {stream: true});
-      text += decodedChunk;
+      text += decoder.decode(value, {stream: true});
+      console.log(text);
       yield text;
     }
 
