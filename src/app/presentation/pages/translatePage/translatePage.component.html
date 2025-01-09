@@ -1,1 +1,25 @@
-<p>translatePage works!</p>,
+<div class="chat-container">
+  <div class="chat-messages">
+    <div class="grid gap-y-2">
+      <app-chat-message text="Hola, ¿Cómo puedo ayudarte?" />
+      <!-- Chat Message -->
+      @for(message of messages(); track $index) {
+        @if(message.isGpt) {
+          <app-chat-message [text]="message.text" />
+        } @else {
+          <app-my-message [text]="message.text" />
+        }
+      }
+
+      @if(isLoading()) {
+        <app-typing-loader />
+      }
+    </div>
+  </div>
+  <!-- MessageBox -->
+  <app-text-message-box-select
+    [options]="languages()"
+    placeHolder="Escribe tu mensaje aquí"
+    (onMessage)="handleMessageWithSelected($event)"
+  />
+</div>
